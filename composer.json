@@ -1,5 +1,5 @@
 {
-    "name": "zucchi/bootstrap",
+    "name": "stefanorg/bootstrap",
     "description": "Simple Module to allow facilitate use of Twitter Bootstrap",
     "type": "module",
     "keywords": [
@@ -7,7 +7,7 @@
         "bootstrap",
         "zf2"
     ],
-    "homepage": "https://github.com/zucchi/ZucchiBootstrap",
+    "homepage": "https://github.com/stefanorg/ZucchiBootstrap",
     "authors" : [{
         "name": "Matt Cockayne",
         "email" : "matt@zucchi.co.uk",
