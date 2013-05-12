@@ -16,7 +16,7 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">=5.4.1",
-        "zucchi/zucchi": "dev-master"
+        "stefanorg/zucchi": "dev-master"
     },
     "autoload": {
         "psr-0": {
