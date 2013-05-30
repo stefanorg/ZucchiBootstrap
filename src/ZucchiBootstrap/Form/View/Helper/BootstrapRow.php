@@ -61,7 +61,14 @@ class BootstrapRow extends FormRow
         'vertical' => '%1$s%2$s%3$s%4$s%5$s',
         'inline' => '%4$s%5$s',
         'search' => '%4$s%5$s',
-        'horizontal' => '<div class="control-group %6$s">%1$s%2$s%3$s<div class="controls">%4$s%5$s</div></div>',
+        'horizontal' => '<div class="span12 field-box %6$s">
+                            <!-- label -->
+                            %1$s%2$s%3$s
+                            <!-- element -->
+                            %4$s
+                            <!-- error -->
+                            %5$s
+                        </div>',
         'tableHead' => '<th>%2$s</th>',
         'tableRow' => '<td class="%6$s">%4$s</td>',
     
