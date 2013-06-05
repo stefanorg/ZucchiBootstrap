@@ -136,11 +136,11 @@ class BootstrapRow extends FormRow
         $elementErrorsHelper = $this->getElementErrorsHelper();
 
         $label               = $element->getLabel();
-        $elementErrorsHelper->setMessageOpenFormat('<div%s>')
+        $elementErrorsHelper->setMessageOpenFormat('<span%s><i class="icon-remove-sign"></i>')
                             ->setMessageSeparatorString('<br/>')
-                            ->setMessageCloseString('</div>');
-        $inputErrorClass = $this->getInputErrorClass();
-        $elementErrors       = $elementErrorsHelper->render($element, array('class' => 'help-block'));
+                            ->setMessageCloseString('</span>');
+        $inputErrorClass     = $this->getInputErrorClass();
+        $elementErrors       = $elementErrorsHelper->render($element, array('class' => 'alert-msg'));
 
         $elementStatus       = $this->getElementStatus($element);
         $type                = $element->getAttribute('type');
