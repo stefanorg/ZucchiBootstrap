@@ -336,7 +336,7 @@ class BootstrapRow extends FormRow
      */
     public function setDefaultElementTemplate($style, $template)
     {
-        $this->defaultElementTemplates[$style];
+        $this->defaultElementTemplates[$style]=$template;
         return $this;
     }
 
