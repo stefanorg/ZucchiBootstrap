@@ -227,6 +227,20 @@ class BootstrapCollection extends AbstractHelper
         return $this->rowHelper;
     }
 
+    public function setRowHelper($rowHelper)
+    {
+        if(is_string($rowHelper)){
+            $this->rowHelper = $this->getServiceManager($rowHelper);
+        }else if($rowHelper instanceof BootstrapRow){
+            $this->rowHelper = $rowHelper;
+        }else{
+            throw new \Exception("Il RowHelper specificato non e' valido.");
+        }
+
+
+        return $this;
+    }
+
     /**
      * Get Markup for template
      *

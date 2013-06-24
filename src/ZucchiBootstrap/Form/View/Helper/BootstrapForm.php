@@ -33,21 +33,12 @@ use \Zend\Form\Fieldset;
  */
 class BootstrapForm extends AbstractHelper
 {
-    protected $defaultOptions = array(
-        'form' => array(
-            'class'=> ' inline-input'
-        ),
-        'fieldset' => array(
-        ),
-        'row' => array(
-        )
-    );
+    protected $collectionHelper = 'bootstrapCollection';
+    protected $rowHelper        = 'bootstrapRow';
 
-    public function __invoke(Form $form, $style = 'vertical', $options = null )
+
+    public function __invoke(Form $form, $style = 'vertical')
     {
-        if(empty($options)){
-            $options = $this->defaultOptions;
-        }
         // var_dump($form);die();
         $form->setAttributes(array(
             'class' => $form->getAttribute('class') . ' inline-input'
@@ -65,14 +56,66 @@ class BootstrapForm extends AbstractHelper
         $elements = $form->getIterator();
         foreach ($elements as $key => $element) {
             if ($element instanceof Fieldset) {
-                $output .= $this->view->bootstrapCollection($element, $style);
+
+                $helper = $this->getCollectionHelper();
+                $output .= $this->view->{$helper}($element, $style);
             } else {
-                $output .= $this->view->bootstrapRow($element, $style);
+                $helper = $this->getRowHelper();
+                
+                $output .= $this->view->{$helper}($element, $style);
             }
         }
 
         $output .= $this->view->form()->closeTag($form);
 
         return $output;
+    }
+
+    /**
+     * Gets the value of collectionHelper.
+     *
+     * @return mixed
+     */
+    public function getCollectionHelper()
+    {
+        return $this->collectionHelper;
+    }
+
+    /**
+     * Sets the value of collectionHelper.
+     *
+     * @param mixed $collectionHelper the collectionHelper
+     *
+     * @return self
+     */
+    public function setCollectionHelper($collectionHelper)
+    {
+        $this->collectionHelper = $collectionHelper;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of rowHelper.
+     *
+     * @return mixed
+     */
+    public function getRowHelper()
+    {
+        return $this->rowHelper;
+    }
+
+    /**
+     * Sets the value of rowHelper.
+     *
+     * @param mixed $rowHelper the rowHelper
+     *
+     * @return self
+     */
+    public function setRowHelper($rowHelper)
+    {
+        $this->rowHelper = $rowHelper;
+
+        return $this;
     }
 }
