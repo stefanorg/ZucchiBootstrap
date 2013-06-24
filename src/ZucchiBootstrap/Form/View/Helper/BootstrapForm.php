@@ -33,8 +33,21 @@ use \Zend\Form\Fieldset;
  */
 class BootstrapForm extends AbstractHelper
 {
-    public function __invoke(Form $form, $style = 'vertical')
+    protected $defaultOptions = array(
+        'form' => array(
+            'class'=> ' inline-input'
+        ),
+        'fieldset' => array(
+        ),
+        'row' => array(
+        )
+    );
+
+    public function __invoke(Form $form, $style = 'vertical', $options = null )
     {
+        if(empty($options)){
+            $options = $this->defaultOptions;
+        }
         // var_dump($form);die();
         $form->setAttributes(array(
             'class' => $form->getAttribute('class') . ' inline-input'

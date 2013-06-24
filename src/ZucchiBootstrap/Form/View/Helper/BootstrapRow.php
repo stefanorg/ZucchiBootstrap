@@ -56,6 +56,20 @@ class BootstrapRow extends FormRow
      * %7$s - status
      *
      * @var array
+     * admim template
+     * <div class="span12 field-box ">
+            <label class="control-label">Username</label>
+            <input type="text" value="stefanorg" placeholder="Your username" class="span9" name="user[username]">
+
+        </div>
+
+        //frontend
+        <div class="control-group">
+            <label class="control-label" for="name1">Name</label>
+            <div class="controls">
+              <input type="text" class="input-large" id="name1">
+            </div>
+        </div>
      */
     protected $defaultElementTemplates = array(
         'vertical' => '%1$s%2$s%3$s%4$s%5$s',
@@ -218,7 +232,7 @@ class BootstrapRow extends FormRow
                 );
             }
 
-            $markup = sprintf($this->defaultElementTemplates[$formStyle],
+            $markup = sprintf($this->getDefaultElementTemplate($formStyle),
                 $labelOpen,
                 $label,
                 $labelClose,
