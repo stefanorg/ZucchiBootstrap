@@ -352,6 +352,7 @@ class BootstrapRow extends FormRow
         $escapeHtmlHelper    = $this->getEscapeHtmlHelper();
         $elementHelper       = $this->getElementHelper();
 
+        $elementString = $elementHelper->render($element);
         if (isset($options['help'])) {
             $help = $options['help'];
             $template = $this->bootstrapTemplates['help'];
@@ -391,7 +392,7 @@ class BootstrapRow extends FormRow
                     $elementString = $elementHelper->render($element);
                     break;
             }
-            return $elementString;
+            // return $elementString;
         }
 
         if (isset($options['prepend']) || isset($options['append'])) {
