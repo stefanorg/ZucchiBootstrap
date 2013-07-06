@@ -28,6 +28,7 @@ use Zend\Form\View\Helper\FormLabel;
 use Zend\Form\View\Helper\FormElementErrors;
 
 use Zucchi\Form\View\Helper\FormElement;
+use Zend\Form\View\Helper\AbstractHelper;
 
 /**
  * @category   Zend
@@ -143,7 +144,6 @@ class BootstrapRow extends FormRow
      */
     public function render(ElementInterface $element)
     {
-
         $escapeHtmlHelper    = $this->getEscapeHtmlHelper();
         $labelHelper         = $this->getLabelHelper();
         $elementHelper       = $this->getElementHelper();
@@ -225,13 +225,13 @@ class BootstrapRow extends FormRow
              // var_dump($element);die();
 
             $elementString = $this->renderBootstrapOptions($element, $bootstrapOptions);
-
+            
             if (!empty($label) && null !== ($translator = $this->getTranslator())) {
                 $label = $translator->translate(
                     $label, $this->getTranslatorTextDomain()
                 );
             }
-
+            
             $markup = sprintf($this->getDefaultElementTemplate($formStyle),
                 $labelOpen,
                 $label,
@@ -240,6 +240,7 @@ class BootstrapRow extends FormRow
                 $elementErrors,
                 $elementStatus
             );
+            
         }
 
         return $markup;
@@ -453,4 +454,20 @@ class BootstrapRow extends FormRow
         return $this->elementHelper;
     }
 
+    protected function getElementErrorsHelper()
+    {
+        if ($this->elementErrorsHelper) {
+            return $this->elementErrorsHelper;
+        }
+
+        if (method_exists($this->view, 'plugin')) {
+            $this->elementErrorsHelper = $this->view->plugin('form_element_errors');
+        }
+
+        if (!$this->elementErrorsHelper instanceof AbstractHelper) {
+            $this->elementErrorsHelper = new FormElementErrors();
+        }
+
+        return $this->elementErrorsHelper;
+    }
 }
