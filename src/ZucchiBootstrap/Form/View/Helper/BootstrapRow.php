@@ -83,6 +83,7 @@ class BootstrapRow extends FormRow
                         </div>',
         'tableHead' => '<th>%2$s</th>',
         'tableRow' => '<td class="%6$s">%4$s</td>',
+        'required' => '<abbr class="required" title="Campo Richiesto">*</abbr>'
 
     );
 
@@ -179,7 +180,12 @@ class BootstrapRow extends FormRow
                 } else {
 
                     $label = $escapeHtmlHelper($label);
+                    $required = (boolean)$element->getOption('required');
+                    if($required)
+                        $label .= $this->defaultElementTemplates['required'];
+
                     $labelAttributes = $element->getLabelAttributes();
+
 
                     if (empty($labelAttributes)) {
                         $labelAttributes = $this->labelAttributes;
@@ -225,13 +231,13 @@ class BootstrapRow extends FormRow
              // var_dump($element);die();
 
             $elementString = $this->renderBootstrapOptions($element, $bootstrapOptions);
-            
+
             if (!empty($label) && null !== ($translator = $this->getTranslator())) {
                 $label = $translator->translate(
                     $label, $this->getTranslatorTextDomain()
                 );
             }
-            
+
             $markup = sprintf($this->getDefaultElementTemplate($formStyle),
                 $labelOpen,
                 $label,
@@ -240,7 +246,7 @@ class BootstrapRow extends FormRow
                 $elementErrors,
                 $elementStatus
             );
-            
+
         }
 
         return $markup;
