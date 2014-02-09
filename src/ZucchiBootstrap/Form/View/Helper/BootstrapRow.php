@@ -28,7 +28,6 @@ use Zend\Form\View\Helper\FormLabel;
 use Zend\Form\View\Helper\FormElementErrors;
 
 use Zucchi\Form\View\Helper\FormElement;
-use Zend\Form\View\Helper\AbstractHelper;
 
 /**
  * @category   Zend
@@ -44,10 +43,10 @@ class BootstrapRow extends FormRow
      * @var string
      */
     protected $formStyle = 'vertical';
-
+    
     /**
      * templates to use for a bootstrap element
-     *
+     * 
      * %1$s - label open
      * %2$s - label
      * %3$s - label close
@@ -55,38 +54,19 @@ class BootstrapRow extends FormRow
      * %5$s - errors
      * %6$s - help
      * %7$s - status
-     *
+     * 
      * @var array
-     * admim template
-     * <div class="span12 field-box ">
-            <label class="control-label">Username</label>
-            <input type="text" value="stefanorg" placeholder="Your username" class="span9" name="user[username]">
-
-        </div>
-
-        //frontend
-        <div class="control-group">
-            <label class="control-label" for="name1">Name</label>
-            <div class="controls">
-              <input type="text" class="input-large" id="name1">
-            </div>
-        </div>
      */
     protected $defaultElementTemplates = array(
         'vertical' => '%1$s%2$s%3$s%4$s%5$s',
         'inline' => '%4$s%5$s',
         'search' => '%4$s%5$s',
-        'horizontal' => '<div class="span12 field-box %6$s">
-                            %1$s%2$s%3$s
-                            %4$s
-                            %5$s
-                        </div>',
+        'horizontal' => '<div class="control-group %6$s">%1$s%2$s%3$s<div class="controls">%4$s%5$s</div></div>',
         'tableHead' => '<th>%2$s</th>',
         'tableRow' => '<td class="%6$s">%4$s</td>',
-        'required' => '<abbr class="required" title="Campo Richiesto">*</abbr>'
-
+    
     );
-
+    
     /**
      * templates used for rendering around an element string
      */
@@ -94,7 +74,7 @@ class BootstrapRow extends FormRow
         'help' => '<%1$s class="help-%2$s">%3$s</%1$s>',
         'prependAppend' => '<div class="%1$s">%2$s%3$s%4$s</div>',
     );
-
+    
     /**
      * @var array
      */
@@ -114,7 +94,7 @@ class BootstrapRow extends FormRow
      * @var FormElementErrors
      */
     protected $elementErrorsHelper;
-
+    
     /**
      * element types that act as grouped elements
      * @var array
@@ -124,7 +104,7 @@ class BootstrapRow extends FormRow
         'multicheckbox',
         'radio',
     );
-
+    
     /**
      * form styles that should be considered as compact
      * @var array
@@ -138,7 +118,7 @@ class BootstrapRow extends FormRow
 
     /**
      * Utility form helper that renders a label (if it exists), an element and errors
-     *
+     * 
      * @param ElementInterface $element
      * @return string
      * @throws \Zend\Form\Exception\DomainException
@@ -149,19 +129,19 @@ class BootstrapRow extends FormRow
         $labelHelper         = $this->getLabelHelper();
         $elementHelper       = $this->getElementHelper();
         $elementErrorsHelper = $this->getElementErrorsHelper();
-
+        
         $label               = $element->getLabel();
-        $elementErrorsHelper->setMessageOpenFormat('<span%s><i class="icon-remove-sign"></i>')
+        $elementErrorsHelper->setMessageOpenFormat('<div%s>')
                             ->setMessageSeparatorString('<br/>')
-                            ->setMessageCloseString('</span>');
-        $inputErrorClass     = $this->getInputErrorClass();
-        $elementErrors       = $elementErrorsHelper->render($element, array('class' => 'alert-msg'));
-
+                            ->setMessageCloseString('</div>');
+        $inputErrorClass = $this->getInputErrorClass();
+        $elementErrors       = $elementErrorsHelper->render($element, array('class' => 'help-block'));
+        
         $elementStatus       = $this->getElementStatus($element);
         $type                = $element->getAttribute('type');
         $bootstrapOptions    = $element->getOption('bootstrap');
         $formStyle           = (isset($bootstrapOptions['style'])) ? $bootstrapOptions['style'] : $this->getFormStyle();
-
+        
         $labelOpen = $labelClose = $labelAttributes = ''; // initialise label variables
         $elementHelp = '';
 
@@ -176,30 +156,25 @@ class BootstrapRow extends FormRow
             if (!empty($label)) {
                 if (in_array($formStyle, $this->compactFormStyles)) {
                     $element->setAttribute('placeholder', $label);
-
+                    
                 } else {
-
+                    
                     $label = $escapeHtmlHelper($label);
-                    $required = (boolean)$element->getOption('required');
-                    if($required)
-                        $label .= $this->defaultElementTemplates['required'];
-
                     $labelAttributes = $element->getLabelAttributes();
-
-
+        
                     if (empty($labelAttributes)) {
                         $labelAttributes = $this->labelAttributes;
                     }
-
-                    $labelAttributes['class'] = isset($labelAttributes['class'])
-                                              ? $labelAttributes['class'] . ' control-label'
+                    
+                    $labelAttributes['class'] = isset($labelAttributes['class']) 
+                                              ? $labelAttributes['class'] . ' control-label' 
                                               : 'control-label';
-
+                    
                     $labelOpen  = $labelHelper->openTag($labelAttributes);
                     $labelClose = $labelHelper->closeTag();
                 }
             }
-
+            
             if (in_array($type, $this->groupElements)) {
                 $options = $element->getValueOptions();
                 foreach ($options as $key => $optionSpec) {
@@ -217,28 +192,19 @@ class BootstrapRow extends FormRow
                 }
                 $element->setAttribute('value_options', $options);
             }
-
-            //$elementString       = $elementHelper->render($element);
-            //var_dump($elementString);die();
-            //element style
-            $elementClassAttribute = $element->getAttribute('class');
-
-            $element->setAttribute('class', empty($elementClassAttribute)
-                                                ? 'span9'
-                                                :  $element->getAttribute('class')
-                                  );
-
-             // var_dump($element);die();
-
-            $elementString = $this->renderBootstrapOptions($element, $bootstrapOptions);
+            
+            
+            $elementString       = $elementHelper->render($element);
+            
+            $elementString = $this->renderBootstrapOptions($elementString, $bootstrapOptions);
 
             if (!empty($label) && null !== ($translator = $this->getTranslator())) {
                 $label = $translator->translate(
                     $label, $this->getTranslatorTextDomain()
                 );
             }
-
-            $markup = sprintf($this->getDefaultElementTemplate($formStyle),
+            
+            $markup = sprintf($this->defaultElementTemplates[$formStyle],
                 $labelOpen,
                 $label,
                 $labelClose,
@@ -246,12 +212,11 @@ class BootstrapRow extends FormRow
                 $elementErrors,
                 $elementStatus
             );
-
         }
-
+        
         return $markup;
     }
-
+    
 
     /**
      * Invoke helper as functor
@@ -263,17 +228,17 @@ class BootstrapRow extends FormRow
      * @return string|FormRow
      */
     public function __invoke(
-        ElementInterface $element = null,
-        $formStyle = 'vertical',
-        $labelPosition = null,
+        ElementInterface $element = null, 
+        $formStyle = 'vertical', 
+        $labelPosition = null, 
         $renderErrors = true
     ) {
         if (!$element) {
             return $this;
         }
-
+        
         $this->setFormStyle($formStyle);
-
+        
         if ($labelPosition !== null) {
             $this->setLabelPosition($labelPosition);
         }
@@ -285,7 +250,7 @@ class BootstrapRow extends FormRow
 
     /**
      * set the style of bootstrap form
-     *
+     * 
      * @param string $style
      * @return \Zucchi\Form\View\Helper\BootstrapRow
      */
@@ -294,20 +259,20 @@ class BootstrapRow extends FormRow
         $this->formStyle = $style;
         return $this;
     }
-
+    
     /**
      * get the current form style
-     *
+     * 
      * @return string
      */
     public function getFormStyle()
     {
         return $this->formStyle;
     }
-
+    
     /**
      * get a string representation of the elements status
-     *
+     * 
      * @param ElementInterface $element
      * @return string
      */
@@ -319,88 +284,43 @@ class BootstrapRow extends FormRow
         }
         return $status;
     }
-
+    
     /**
      * set the template to use in rendering
-     *
+     * 
      * @param string $template
      * @return NULL|string:
      */
-    public function getDefaultElementTemplate($style)
+    public function getDefaultElementTemplate($style) 
     {
         if (!isset($this->defaultElementTemplates[$style])) {
             return null;
         }
         return $this->defaultElementTemplates[$style];
     }
-
+    
     /**
      * set the template for a specified style
-     *
+     * 
      * @param string $style
      * @param string $template
      * @return $this
      */
     public function setDefaultElementTemplate($style, $template)
     {
-        $this->defaultElementTemplates[$style]=$template;
+        $this->defaultElementTemplates[$style] = $template;
         return $this;
     }
-
+    
     /**
      * Render "bootstrap" options
      *
      * @param string $elementString
-     * @param ElementInterface $element
      * @param array|Traversable $options
      */
-    public function renderBootstrapOptions($element, $options)
+    public function renderBootstrapOptions($elementString, $options)
     {
         $escapeHtmlHelper    = $this->getEscapeHtmlHelper();
-        $elementHelper       = $this->getElementHelper();
-
-        $elementString = $elementHelper->render($element);
-        if (isset($options['help'])) {
-            $help = $options['help'];
-            $template = $this->bootstrapTemplates['help'];
-            $style = 'placeholder';
-            $content = '';
-            if (is_array($help)) {
-                if (isset($help['style'])) {
-                    $style = $help['style'];
-                }
-                if (isset($help['content'])) {
-                    $content = $help['content'];
-                }
-            } else {
-
-                $content = $help;
-            }
-
-            if (null !== ($translator = $this->getTranslator())) {
-                $content = $translator->translate(
-                    $content, $this->getTranslatorTextDomain()
-                );
-            }
-
-            switch ($style) {
-                case 'inline':
-                case 'block':
-                    $elementString = $elementHelper->render($element);
-                    $elementString .= sprintf($template,
-                        ($style == 'block' ? 'p' : 'span'),
-                        $style,
-                        $content
-                    );
-                    break;
-                default:
-                    //placeholder
-                    $element->setAttribute('placeholder', $content);
-                    $elementString = $elementHelper->render($element);
-                    break;
-            }
-            // return $elementString;
-        }
 
         if (isset($options['prepend']) || isset($options['append'])) {
             $template = $this->bootstrapTemplates['prependAppend'];
@@ -433,9 +353,40 @@ class BootstrapRow extends FormRow
                 $append);
 
         }
-
-        return isset($elementString) ? $elementString : $elementHelper->render($element);
-
+        if (isset($options['help'])) {
+            $help = $options['help'];
+            $template = $this->bootstrapTemplates['help'];
+            $style = 'inline';
+            $content = '';
+            if (is_array($help)) {
+                if (isset($help['style'])) {
+                    $style = $help['style'];
+                }
+                if (isset($help['content'])) {
+                    $content = $help['content'];
+                    if (null !== ($translator = $this->getTranslator())) {
+                        $content = $translator->translate(
+                            $content, $this->getTranslatorTextDomain()
+                        );
+                    }
+                }
+            } else {
+                
+                $content = $help;
+            }
+            
+            $tag = $style == 'block' ? 'p' : 'span';
+            
+            $elementString .= sprintf($template,
+                $tag,
+                $style,
+                $content
+            );
+            
+        }
+        
+        return $elementString;
+        
     }
 
     /**
@@ -460,20 +411,4 @@ class BootstrapRow extends FormRow
         return $this->elementHelper;
     }
 
-    protected function getElementErrorsHelper()
-    {
-        if ($this->elementErrorsHelper) {
-            return $this->elementErrorsHelper;
-        }
-
-        if (method_exists($this->view, 'plugin')) {
-            $this->elementErrorsHelper = $this->view->plugin('form_element_errors');
-        }
-
-        if (!$this->elementErrorsHelper instanceof AbstractHelper) {
-            $this->elementErrorsHelper = new FormElementErrors();
-        }
-
-        return $this->elementErrorsHelper;
-    }
 }
