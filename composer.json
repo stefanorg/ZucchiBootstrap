@@ -16,7 +16,12 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">=5.4.1",
-        "stefanorg/zucchi": "dev-master"
+        "stefanorg/zucchi": "dev-master",
+        "zendframework/zend-modulemanager": "2.*",
+        "zendframework/zend-loader": "2.*",
+        "zendframework/zend-form": "2.*",
+        "zendframework/zend-view": "2.*",
+        "zendframework/zend-navigation": "2.*"
     },
     "autoload": {
         "psr-0": {
